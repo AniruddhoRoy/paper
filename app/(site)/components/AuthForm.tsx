@@ -7,6 +7,7 @@ import { AuthSocialButton } from "./AuthSocialButton";
 import { FaGithub } from "react-icons/fa";
 import { FaGoogle } from "react-icons/fa";
 import { FaFacebook } from "react-icons/fa";
+import axios from "axios";
 type variant= 'login'|'signup';
 export function AuthForm(){
     const [variant,setVariant] = useState<variant>('login');
@@ -39,7 +40,7 @@ export function AuthForm(){
 
         }
         if(variant==='signup'){
-            
+            axios.post('api/register',data);
         }
     }
     const SocialAction=(action:string)=>{
@@ -68,9 +69,9 @@ export function AuthForm(){
                     </div>
                 </div>
                     	<div className="flex justify-center items-center mt-6 space-x-3">
-                            <AuthSocialButton icon={FaGithub} onclick={()=>SocialAction('github')}/>
-                            <AuthSocialButton icon={FaGoogle} onclick={()=>SocialAction('google')}/>
-                            <AuthSocialButton icon={FaFacebook} onclick={()=>SocialAction('facbook')}/>
+                            <AuthSocialButton disabled={isLoading} icon={FaGithub} onclick={()=>SocialAction('github')}/>
+                            <AuthSocialButton disabled={isLoading} icon={FaGoogle} onclick={()=>SocialAction('google')}/>
+                            <AuthSocialButton disabled={isLoading} icon={FaFacebook} onclick={()=>SocialAction('facbook')}/>
                         </div>
             </div>
             <div className="flex gap-2 justify-center text-sm mt-6 px-2 text-gray-500">
