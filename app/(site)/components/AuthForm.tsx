@@ -8,6 +8,8 @@ import { FaGithub } from "react-icons/fa";
 import { FaGoogle } from "react-icons/fa";
 import { FaFacebook } from "react-icons/fa";
 import axios from "axios";
+import {toast} from "react-hot-toast";
+import { signIn } from "next-auth/react";
 type variant= 'login'|'signup';
 export function AuthForm(){
     const [variant,setVariant] = useState<variant>('login');
@@ -35,20 +37,49 @@ export function AuthForm(){
     })
     const OnSubmit:SubmitHandler<FieldValues>=(data)=>{
         setLoading(true);
-
         if(variant==='login'){
-
+            signIn('credentials',{
+                ...data,
+                redirect:false
+            }).then((callback)=>{
+                if(callback?.error){
+                    toast.error("Invalid Credentials")
+                    
+                }
+                if(callback?.ok && !callback.error){
+                    toast.success("Success");
+                }
+            }).finally(()=>{
+                setLoading(false);
+            })
         }
         if(variant==='signup'){
-            axios.post('api/register',data);
+            axios.post('api/register',data).catch(()=>{
+                toast.error('Something Went Wrong')
+            }).finally(()=>{
+                setLoading(false)
+            });
         }
     }
     const SocialAction=(action:string)=>{
         setLoading(true);
+        signIn(action,{redirect:false}).then((callback)=>{
+            if(callback?.error){
+                toast.error('something went wrong')
+            }
+            if(callback?.ok && !callback.error){
+                toast.success('Success');
+            }
+        }).finally(()=>{
+            setLoading(false)
+        })
     }
     return (<div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white px-4 py-8 shadow sm:rounded-lg sm:px-10">
-        <form onSubmit={handleSubmit(OnSubmit)} className="space-y-6">
+            <div className="flex justify-center items-center text-lg font-semibold">
+            <h3>{variant=='login'?"Sign in to ":"Sign up "} your account</h3>
+            </div>
+        <form onSubmit={handleSubmit(OnSubmit)} className="space-y-3">
             {variant==='signup' && <><Input id='name' label="Name" disable={isLoading} register={register} errors={errors}></Input></>}
             <Input id='email' type="email" label="Email" disable={isLoading} register={register} errors={errors}></Input>
             <Input id='password' type="password" label="Password" disable={isLoading} register={register} errors={errors}></Input>
@@ -68,13 +99,12 @@ export function AuthForm(){
                         </span>
                     </div>
                 </div>
-                    	<div className="flex justify-center items-center mt-6 space-x-3">
+                    	<div className="flex justify-center items-center mt-4 space-x-3">
                             <AuthSocialButton disabled={isLoading} icon={FaGithub} onclick={()=>SocialAction('github')}/>
                             <AuthSocialButton disabled={isLoading} icon={FaGoogle} onclick={()=>SocialAction('google')}/>
-                            <AuthSocialButton disabled={isLoading} icon={FaFacebook} onclick={()=>SocialAction('facbook')}/>
                         </div>
             </div>
-            <div className="flex gap-2 justify-center text-sm mt-6 px-2 text-gray-500">
+            <div className="flex gap-2 justify-center text-sm mt-3 px-2 text-gray-500">
                 {variant==='login'?'New to Paper messaging':"Already Have an account"}
             
             <div className="text-sky-400 underline cursor-pointer" onClick={toggleVariant}>
