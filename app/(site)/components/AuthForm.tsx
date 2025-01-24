@@ -1,7 +1,7 @@
 "use client"
 import { Button } from "@/app/components/Button";
 import { Input } from "@/app/components/Input/Input";
-import {useCallback, useState} from "react"
+import {useCallback, useEffect, useState} from "react"
 import {useForm , FieldValues, SubmitHandler} from "react-hook-form"
 import { AuthSocialButton } from "./AuthSocialButton";
 import { FaGithub } from "react-icons/fa";
@@ -9,11 +9,21 @@ import { FaGoogle } from "react-icons/fa";
 import { FaFacebook } from "react-icons/fa";
 import axios from "axios";
 import {toast} from "react-hot-toast";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 type variant= 'login'|'signup';
 export function AuthForm(){
+    const session = useSession()
+    const router = useRouter()
     const [variant,setVariant] = useState<variant>('login');
     const [isLoading,setLoading] =useState(false);
+
+    useEffect(()=>{
+        if(session.status === 'authenticated'){
+            router.push('/users')
+        }
+    },[session.status,router])
+
     const toggleVariant = useCallback(()=>{
         if(variant==='login'){
             setVariant("signup")
@@ -48,13 +58,16 @@ export function AuthForm(){
                 }
                 if(callback?.ok && !callback.error){
                     toast.success("Success");
+                    router.push('/users')
                 }
             }).finally(()=>{
                 setLoading(false);
             })
         }
         if(variant==='signup'){
-            axios.post('api/register',data).catch(()=>{
+            axios.post('api/register',data).then(()=>{
+                signIn('credentials',{...data,redirect:false})
+            }).catch(()=>{
                 toast.error('Something Went Wrong')
             }).finally(()=>{
                 setLoading(false)
