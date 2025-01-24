@@ -3,11 +3,17 @@
 import useRoutes from "@/app/hooks/useRoutes"
 import { DesktopItems } from "./DesktopItems"
 import { useState } from "react"
+import { User } from "@prisma/client"
+import { Avatar } from "../Avatar"
 
-export function DesktopSideBar(){
+interface currentUserProps{
+    currentUser:User
+}
+
+export function DesktopSideBar({currentUser}:currentUserProps){
     const routes = useRoutes()
     const [isOpen,setIsopen] = useState(false)
-
+    console.log(currentUser)
     return <div className="
     hidden 
     lg:fixed 
@@ -37,6 +43,22 @@ export function DesktopSideBar(){
                 />
             ))}
         </ul>
+
+       </nav>
+       <nav className="
+       mt-4
+       flex
+       flex-col
+       justify-between
+       items-center
+       ">
+        <div onClick={()=>{setIsopen(true)}} className="
+        cursor-pointer
+        hover:opacity-75
+        transition
+        ">
+            <Avatar user={currentUser}/>
+        </div>
 
        </nav>
     </div>
