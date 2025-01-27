@@ -25,12 +25,57 @@ export async function POST(request:Request){
                 name,
                 isGroup,
                 users:{
-
+                    connect:[
+                        ...members.map((member:{value:string})=>({
+                            id:member.value
+                        })),
+                        {
+                            id:currentUser.id
+                        }
+                    ]
                 }
+            },
+            include:{
+                users:true
             }
            }) 
+           return NextResponse.json(newConversation)
         }
 
+        const existingConversations = await client.conversation.findMany({
+            where:{
+                OR:[
+                    {
+                        userIds:{
+                            equals:[currentUser.id,userId]
+                        }
+                    },
+                    {
+                        userIds:{
+                            equals:[userId,currentUser.id]
+                        }
+                    }
+                ]
+            }
+        })
+        const singleConversation = existingConversations[0];
+        if(singleConversation){
+            return NextResponse.json(singleConversation)
+        }
+        const newConversation = await client.conversation.create({
+            data:{
+                users:{
+                    connect:[
+                        {id:currentUser.id},
+                        {id:userId}
+                    ]
+                }
+            },
+            include:{
+                users:true
+            }
+        })
+            return NextResponse.json(newConversation)
     }catch{
         return new NextResponse("Internal Error",{status:500})
     }

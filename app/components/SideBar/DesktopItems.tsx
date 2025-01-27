@@ -28,10 +28,11 @@ export function DesktopItems({label,href,icon:Icon,active,onclick}:DesktopItemsP
             text-sm
             leading-6
             font-semibold
+            opacity-50
             hover:text-black
             hover:bg-gray-100
             `,
-            active && "bg-gray-100 text-black"
+            active && "bg-gray-100 text-black  opacity-100"
   )}>
         <Icon className="w-6 h-6 shrink-0" />
         <span className="sr-only">{label}</span>

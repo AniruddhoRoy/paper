@@ -13,7 +13,7 @@ interface currentUserProps{
 export function DesktopSideBar({currentUser}:currentUserProps){
     const routes = useRoutes()
     const [isOpen,setIsopen] = useState(false)
-    console.log(currentUser)
+    // console.log(currentUser)
     return <div className="
     hidden 
     lg:fixed 

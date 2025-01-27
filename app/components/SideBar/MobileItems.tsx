@@ -25,7 +25,7 @@ const MobileItems:React.FC<MobileItemsProps> = ({
             return onclick();
         }
     }
-
+    // console.log(label+" "+active)
     return <li onClick={HandleClick} className={clsx(`
     group
     flex
@@ -36,11 +36,11 @@ const MobileItems:React.FC<MobileItemsProps> = ({
     justify-center
     w-full
     p-4
-  text-gray-500
+  opacity-50
   hover:text-black
   hover:bg-gray-100
     `,
-    active && "text-black bg-gray-100"
+    active && "text-black bg-gray-100 opacity-100"
     )} >
         <Link href={href}>
         <Icon className="h-6 w-6"/>
