@@ -1,3 +1,5 @@
+"use client"
+
 import { useMemo } from "react";
 import { usePathname } from "next/navigation";
 import { HiChat } from "react-icons/hi";

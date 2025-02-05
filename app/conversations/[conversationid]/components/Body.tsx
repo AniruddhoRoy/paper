@@ -14,7 +14,7 @@ export const Body:React.FC<initialMessagesProps>=({initialMessages})=>{
     const [messages,setMessages] = useState(initialMessages)
     const bottomRef = useRef<HTMLDivElement>(null)
     const {conversationId} = useConversationId();
-
+    //todo:have to fix this
     useEffect(()=>{
         axios.post(`/api/conversations/${conversationId}/seen`)
     },[conversationId])

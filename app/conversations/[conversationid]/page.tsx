@@ -6,12 +6,17 @@ import { Body } from "./components/Body"
 import { Form } from "./components/Form"
 
 interface IParams{
-    conversationId:string
+    conversationid:string
 }
 
 const ConversationId = async ({params}:{params:IParams})=>{
-    const conversation = await GetConversationById(params.conversationId)
-    const messages = await GetMessages(params.conversationId)
+    // console.log(await params.conversationid)
+    const conversationId = await params; // Await the promise once
+const conversation = await GetConversationById(conversationId.conversationid);
+const messages = await GetMessages(conversationId.conversationid);
+
+    // const conversation = await GetConversationById(await params.conversationid)
+    // const messages = await GetMessages(await params.conversationid)
     if(!conversation){
         return (<div className="lg:pl-80 h-full">
                 <div className="h-full flex flex-col">
