@@ -20,7 +20,7 @@ export default function ConversationBox({data,selected}:ConversationBoxProps){
     const session = useSession();
     const router = useRouter()
     const handleClick = useCallback(()=>{
-        router.push(`conversations/${data.id}`)
+        router.push(`/conversations/${data.id}`)
     },[router,data.id])
 
     const lastMessage = useMemo(()=>{
