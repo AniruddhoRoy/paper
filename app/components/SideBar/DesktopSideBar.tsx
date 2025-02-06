@@ -5,6 +5,7 @@ import { DesktopItems } from "./DesktopItems"
 import { useState } from "react"
 import { User } from "@prisma/client"
 import { Avatar } from "../Avatar"
+import { SettingsModal } from "./SettingsModal"
 
 interface currentUserProps{
     currentUser:User
@@ -14,7 +15,15 @@ export function DesktopSideBar({currentUser}:currentUserProps){
     const routes = useRoutes()
     const [isOpen,setIsopen] = useState(false)
     // console.log(currentUser)
-    return <div className="
+    return (
+    <>
+    <SettingsModal
+    currentUser = {currentUser}
+    isOpen={isOpen}
+    onClose={()=>setIsopen(false)}
+    />
+
+    <div className="
     hidden 
     lg:fixed 
     lg:inset-y-0 
@@ -62,4 +71,5 @@ export function DesktopSideBar({currentUser}:currentUserProps){
 
        </nav>
     </div>
+    </>)
 }

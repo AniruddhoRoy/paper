@@ -3,10 +3,12 @@
 import { useOtherUser } from "@/app/hooks/useOtherUser"
 import { Conversation, User } from "@prisma/client"
 import { format } from "date-fns"
-import { Fragment, useMemo } from "react"
+import { Fragment, useMemo, useState } from "react"
 import {Dialog, Transition} from "@headlessui/react"
 import {IoClose , IoTrash} from "react-icons/io5"
 import { Avatar } from "@/app/components/Avatar"
+import Modal from "@/app/components/Model"
+import { ConfirmModal } from "./ConfirmModal"
 
 type ProfileDrawerProps={
     data:Conversation&{
@@ -18,6 +20,7 @@ type ProfileDrawerProps={
 
 export const ProfileDrawer:React.FC<ProfileDrawerProps> = ({isOpen,onClose,data})=>{
     const otherUser = useOtherUser(data)
+    const [isconfirmOpen,setConfirmOpen] = useState(false)
     const joinedDate = useMemo(()=>{
         return format(new Date(otherUser.createdAt),'PP')
     },[otherUser.createdAt])
@@ -34,6 +37,9 @@ export const ProfileDrawer:React.FC<ProfileDrawerProps> = ({isOpen,onClose,data}
     },[data])
 
     return (
+        <>
+        <ConfirmModal isOpen={isconfirmOpen} onClose={()=>{setConfirmOpen(false)}}>
+            </ConfirmModal>
         <Transition.Root show={isOpen} as={Fragment}>
             <Dialog as="div" className='relative z-50' onClose={onClose}>
                 <Transition.Child 
@@ -137,7 +143,7 @@ export const ProfileDrawer:React.FC<ProfileDrawerProps> = ({isOpen,onClose,data}
                                                 {statusText}
                                              </div>
                                              <div className="flex gap-10 my-8">
-                                                <div onClick={()=>{}}
+                                                <div onClick={()=>{setConfirmOpen(true)}}
                                                     className="flex
                                                     flex-col
                                                     gap-3
@@ -204,5 +210,6 @@ export const ProfileDrawer:React.FC<ProfileDrawerProps> = ({isOpen,onClose,data}
 
             </Dialog>
         </Transition.Root>
+        </>
     )
 }
