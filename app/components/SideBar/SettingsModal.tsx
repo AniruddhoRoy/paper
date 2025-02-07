@@ -8,6 +8,9 @@ import { FieldValues, SubmitHandler, useForm } from "react-hook-form"
 import toast from "react-hot-toast"
 import Modal from "../Model"
 import { Input } from "../Input/Input"
+import Image from "next/Image"
+import { CldUploadButton } from "next-cloudinary"
+import { Button } from "../Button"
 
 type SettingsModalProps={
     currentUser:User
@@ -73,11 +76,48 @@ export const SettingsModal:React.FC<SettingsModalProps>=({currentUser,isOpen,onC
                     ">
                         <Input disable={isLoading} label="Name" register={register} id="name" required errors={errors}></Input>
                     </div>
-                    <label>
+                    <label
+                    className="
+                    block
+                    text-sm
+                    font-medium
+                    leading-6
+                    text-gray-900
+                    "
+                    >
                         Photo
                     </label>
-                </div>
+                    <div className="
+                    mt-2
+                    flex
+                    items-center
+                    gap-x-3
+                    ">
+                        <Image 
+                        width={48}
+                        height={48}
+                        className="rounded-full"
+                        src={image||currentUser.image||'/images/placeholder.jpg'}
+                        alt="Avater"
+                        />
+                        <CldUploadButton
+                        options={{maxFiles:1}}
+                        onSuccess={(result)=>{handleUpload(result)}}
+                        uploadPreset="test-1"
+                        >
+                            <Button disabled={isLoading} secondary type="button"> Change</Button>
+                        </CldUploadButton>
+                    </div>
 
+                </div>
+                    <div className="mt-6 flex items-center justify-end gap-x-6">
+                        <Button disabled={isLoading} secondary onclick={onClose}>
+                            Cnacel
+                        </Button>
+                        <Button disabled={isLoading} type="submit">
+                            Update
+                        </Button>
+                    </div>
             </div>
         
         </form>
