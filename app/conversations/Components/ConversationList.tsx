@@ -7,12 +7,21 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { MdOutlineGroupAdd } from "react-icons/md";
 import ConversationBox from "./ConversationBox";
+import { GroupChatModal } from "./GroupChatModal";
+import { User } from "@prisma/client";
 
-export default function ConversationList({initialItems}:{initialItems:FullConversationType[]}){
+export default function ConversationList({initialItems,users}:{initialItems:FullConversationType[],users:User[]}){
     const [items,setItems] = useState(initialItems);
+    const [isModalOpen,setModalOpen] = useState(false)
     const router = useRouter();
     const {conversationId , isOpen} = useConversationId()
     return (
+        <>
+        <GroupChatModal
+        isOpen= {isModalOpen}
+        onClose = {()=> setModalOpen(false)}
+        users={users}
+        />
         <aside className={clsx(`
             fixed
             inset-y-0
@@ -36,7 +45,9 @@ export default function ConversationList({initialItems}:{initialItems:FullConver
                     rounded-full p-2 bg-gray-100
                     text-gray-600 cursor-pointer hover:opacity-75
                     transition
-                    ">
+                    "
+                    onClick={()=>{setModalOpen(true)}}
+                    >
                         <MdOutlineGroupAdd size={20}/>
                     </div>
                 </div>
@@ -46,5 +57,6 @@ export default function ConversationList({initialItems}:{initialItems:FullConver
             </div>
 
         </aside>
+        </>
     )
 }

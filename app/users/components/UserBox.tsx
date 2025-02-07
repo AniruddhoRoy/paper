@@ -1,5 +1,6 @@
 "use client"
 import { Avatar } from "@/app/components/Avatar";
+import LoadingModal from "@/app/components/LoadingModal";
 import { User } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -18,7 +19,12 @@ export function UserBox({data}:{data:User}){
             setLoading(false)
         })
     },[data,router])
-    return <div onClick={handleSubmit} className="
+    return(<> 
+    {
+        loading && <LoadingModal />
+    }
+    
+    <div onClick={handleSubmit} className="
     w-full
     relative
     flex
@@ -43,4 +49,5 @@ export function UserBox({data}:{data:User}){
 
         </div>
     </div>
+    </>)
 }
