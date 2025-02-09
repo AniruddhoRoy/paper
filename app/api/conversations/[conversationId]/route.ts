@@ -1,5 +1,6 @@
 import { getCurrentUser } from "@/app/actions/getCurrentUser";
 import client from "@/app/libs/prismadb";
+import { pusherServer } from "@/app/libs/pusher";
 import { NextResponse } from "next/server"
 
 
@@ -18,7 +19,7 @@ export async function DELETE(
         if(!currentUser?.id){
             return new NextResponse('Unauthorized',{status:401})
         }
-       const existingConversation = client.conversation.findUnique({
+       const existingConversation =await client.conversation.findUnique({
         where:{
             id :conversationId
         },
@@ -36,6 +37,11 @@ export async function DELETE(
                 hasSome:[currentUser.id]
             }
         }
+       })
+       existingConversation.users.forEach((user)=>{
+            if(user.email){
+                pusherServer.trigger(user.email,'conversation:remove',existingConversation)
+            }
        })
 
        return NextResponse.json(deleteConversation)
